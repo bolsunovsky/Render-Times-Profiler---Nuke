@@ -45,7 +45,7 @@ def setCurrentScript(newScript):
 
 def getCurrentScript():
     return _currentScript
-# TODO: add more checks.
+
 for script in os.listdir(readPath):
     if script.endswith(".nk"):
         nkScripts.append(script)
@@ -66,7 +66,7 @@ def executeWrite(renderCount):
             jsonResults[getCurrentScript()] = renderTimeResults
             
             averageRenderTime = math.floor(sum(renderTimeResults) / len(renderTimeResults) * 100)/100.0
-            # report average write time of the same script renders.
+            # Time average of the renders.
             print('Finished rendering ' + getCurrentScript() + ' with an average render time of ' + str(averageRenderTime) + ' seconds')
             updateJSON(jsonResults)
 
@@ -88,11 +88,10 @@ def startRender():
     startTime = timer()
     print('Starting rendering ' + getCurrentScript())
 
-# Times and updates render times.
 def endRender():
     renderTimeResults.append(timer() - startTime)
     print('Finished rendering ' + getCurrentScript())
-
+    
 
 nuke.addBeforeRender(startRender)
 nuke.addAfterRender(endRender)
