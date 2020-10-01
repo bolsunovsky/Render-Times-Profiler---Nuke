@@ -6,7 +6,10 @@ from timeit import default_timer as timer
 import json
 import math
 
-# Renders all nuke scripts in a directory with Write node "Write1" present. Outputs render times to a JSON file in a { 'name': [time] } format. Prints average time of a render script set (number of renders can be changed in renderCount for more accurate render time per script)
+# Renders all nuke scripts in a directory with Write node "Write1"
+#present. Outputs render times to a JSON file in a { 'name': [time] }
+#format. Prints average time of a render script set (number of renders
+#can be changed in renderCount for more accurate render time per script)
 
 # Invoke script with arguments:
 # Nuke -t(i) (file: script path) (directory: .nk scrips path) (file: output JSON path)
