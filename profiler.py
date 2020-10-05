@@ -21,48 +21,48 @@ elif __platform == "win32":
     _platform = 'win'
 
 
-# Check if path is to a file
+# Check if path is to a file:
 def checkFilePath(path):
     if os.path.isfile(path): return path
     else: raise TypeError("Third argument must be a file")
 
-# Check if file is of JSON format
+# Check if file is of JSON format:
 def checkJsonFormat(path):
     if path.endswith(".json"): return path
     else: raise TypeError("File must end with .json")
 
-# Check if path is a directory
+# Check if path is a directory:
 def checkDirectoryPath(path):
     if os.path.isdir(path): return path
     else: raise TypeError("Second argument must be a directory")
         
-# Checks for .nk script presence in the given directory
+# Checks for .nk script presence in the given directory:
 def findNukeScripts(path):
     nukeScripts = filter(lambda script: script.endswith(".nk"), os.listdir(path))
     if len(nukeScripts) > 0: return nukeScripts
     else: raise LookupError("No Nuke scripts found in the directory")
     
-# Check if running on a compatible os. TODO: test other platforms.
+# Check if running on a compatible os: TODO: test other platforms
 def _checkPlatform(platform):
     if platform == 'osx': pass
     else: raise ImportWarning(platform + " has not been tested yet. Unstable.")
 
 _checkPlatform(_platform)
 
-# .nk directory read path.
+# .nk directory read path:
 readPath = checkDirectoryPath(sys.argv[1])
 
 
-# JSON file path.
+# JSON file path:
 savePath = checkJsonFormat((checkFilePath(sys.argv[2])))
 
-# Amount of times the script is rerendered.
+# Amount of times the script is rerendered:
 renderCount = 3
 
-# Amount of frames to render per render count.
+# Amount of frames to render per render count:
 framesToRender = 24
 
-# Declarations.
+# Declarations:
 nukeScripts = findNukeScripts(path = readPath)
 print(nukeScripts)
 renderTimeResults = []
@@ -75,7 +75,7 @@ def updateJSON(data):
 
 
 
-# Set current .nk script.
+# Set current .nk script:
 def setCurrentScript(newScript):
     global _currentScript
     changed = _currentScript != (newScript)
@@ -88,15 +88,14 @@ def getCurrentScript():
     
     
 
-#Set current nuke script to the first element of the nukeScripts.
+# Set current nuke script to the first element of the nukeScripts:
 setCurrentScript(nukeScripts[0])
-
-print("read path is " + readPath)
+# Open current script with Nuke:
 nuke.scriptOpen(readPath + '/' + getCurrentScript())
 
 
 
-# Recursively render the scripts repeating based on number of interation.
+# Recursively render the scripts repeating based on number of interation:
 def executeWrite(renderCount):
                
     global renderTimeResults
@@ -135,11 +134,11 @@ def endRender():
     print("Finished rendering " + getCurrentScript())
 
 
-# Adding callbacks for time tracking.
+# Adding callbacks for time tracking:
 nuke.addBeforeRender(startRender)
 nuke.addAfterRender(endRender)
 
-# Render the project.
+# Render the project:
 executeWrite(renderCount)
     
 
