@@ -1,0 +1,152 @@
+#! /Applications/Nuke12.2v3/Nuke12.2v3.app/Contents/MacOS/libnuke-12.2.3.dylib -nx
+#write_info Write1 file:"/Users/plutex/testRender1.mov" format:"1920 1080 1" chans:":rgba.red:rgba.green:rgba.blue:" framerange:"1 60" fps:"0" colorspace:"default (Gamma2.2)" datatype:"unknown" transfer:"unknown" views:"main" colorManagement:"Nuke"
+version 12.2 v3
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="25" w="1792" h="1067" maximized="1" screen="0">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1129" stretch="1"/>
+            <splitter orientation="2">
+                <split size="615"/>
+                <dock id="" activePageId="Viewer.1">
+                    <page id="Viewer.1"/>
+                </dock>
+                <split size="432"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                </dock>
+            </splitter>
+            <split size="615"/>
+            <dock id="" activePageId="uk.co.thefoundry.scripteditor.2">
+                <page id="Properties.1"/>
+                <page id="uk.co.thefoundry.backgroundrenderview.1"/>
+                <page id="uk.co.thefoundry.scripteditor.2"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name /Users/Shared/nukescenes/CameraShakeRenderTest.nk
+ last_frame 60
+ lock_range true
+ format "1920 1080 0 0 1920 1080 1 HD_1080"
+ proxy_type scale
+ proxy_format "640 480 0 0 640 480 1 PC_Video"
+ proxy_scale {1 1}
+ colorManagement Nuke
+ workingSpaceLUT linear
+ monitorLut sRGB
+ int8Lut sRGB
+ int16Lut sRGB
+ logLut Cineon
+ floatLut linear
+ addUserKnob {20 mariTab l Mari}
+ addUserKnob {26 cmdStatus l "listen status" t "The status of Nuke's command port" T <b>Disabled</b>}
+ addUserKnob {26 sendStatus l "send status" t "The status of Nuke's connection to Mari" T <b>Inactive</b>}
+ addUserKnob {3 socketPort l "nuke command port" t "Port to listen on. Make sure this matches the command port set in Mari's \"Nuke\" Palette."}
+ socketPort 50007
+ addUserKnob {6 enableSocket l enabled -STARTLINE}
+ addUserKnob {20 advanced n 1}
+ advanced 0
+ addUserKnob {3 portRange l "port range" t "If the main specified command port is unavailable, Nuke will try using the next port number, and continue until successful or the indicated number of ports have been tried."}
+ portRange 200
+ addUserKnob {4 enablePortRange l "" t "Indicates whether to use a range of ports up to the given number, or to use only the single one specified." -STARTLINE M {"use range" "single port only"}}
+ addUserKnob {26 divider l "" +STARTLINE}
+ addUserKnob {1 hostName l "mari host" t "The machine name or IP address that Mari is running on.\nLeave empty if both Mari and Nuke are running on the same machine."}
+ hostName localhost
+ addUserKnob {3 socketPortSend l port t "Port that Mari is listening to. Make sure this matches the command port set in Mari's preferences." -STARTLINE}
+ socketPortSend 6100
+ addUserKnob {2 mariDataDir l "mari data dir" t "Path to directory that will hold transient data to be sent to Mari (exrs, objs and fbx files). If this is left empty, a \"mari\" directory will be created in the nk file's location"}
+ mariDataDir "\[getenv NUKE_TEMP_DIR]/mariData"
+ addUserKnob {2 mariLocation l "mari launch path" t "The path to launch Mari from.<br>This can also be set using the <b>MARI_INSTALL_PATH</b> environment variable."}
+}
+Read {
+ inputs 0
+ file_type exr
+ file "\[value Tutorial_Path.tutorpath]/Keying/images/goldfish.%03d.exr"
+ format "1920 1080 0 0 1920 1080 1 HD_1080"
+ last 60
+ origlast 60
+ origset true
+ name Read9
+ note_font Verdana
+ xpos 155
+ ypos -146
+}
+Reformat {
+ name Reformat1
+ xpos 155
+ ypos -50
+}
+Transform {
+ scale 0.86
+ center {960 540}
+ name Transform1
+ xpos 155
+ ypos -1
+}
+CameraShake3 {
+ name CameraShake3_1
+ label "\[value amplitude] px at \[value frequency]"
+ xpos 155
+ ypos 58
+ cs_center {{"\[value input.width 0]/2"} {"\[value input.height 0]/2"}}
+}
+Card3D {
+ name Card3D1
+ xpos 155
+ ypos 120
+}
+Write {
+ file /Users/plutex/testRender1.mov
+ file_type mov
+ mov64_format "mov (QuickTime / MOV)"
+ mov64_codec appr
+ mov_h264_codec_profile "High 4:2:0 8-bit"
+ mov64_pixel_format {{0} ""}
+ mov64_quality High
+ mov64_fast_start true
+ mov64_write_timecode true
+ mov64_gop_size 12
+ mov64_b_frames 0
+ mov64_bitrate 20000
+ mov64_bitrate_tolerance 4000000
+ mov64_quality_min 1
+ mov64_quality_max 3
+ checkHashOnRead false
+ version 59
+ name Write1
+ xpos 155
+ ypos 156
+}
+Viewer {
+ frame 1
+ frame_range 1-60
+ input_process false
+ name Viewer2
+ xpos 155
+ ypos 212
+}
+NoOp {
+ inputs 0
+ name Tutorial_Path
+ label "__________\nDouble-click on\nthis node and\nbrowse to the \nlocation where\nyou installed\nthe tutorial\nproject files. "
+ note_font "Verdana Bold"
+ note_font_size 9
+ note_font_color 0x9e0000ff
+ xpos -228
+ ypos -159
+ addUserKnob {20 User}
+ addUserKnob {2 tutorpath l "Tutorial Project Directory:" t "This field needs the full path of the location where you installed the tutorial files. \n\nIf you don't know the path, click the folder button and browse through your directory structure to find and select the folder where the project files are stored. "}
+ tutorpath /Users/Shared/Nuke_Tutorials/
+ addUserKnob {26 ""}
+ addUserKnob {26 "" -STARTLINE T "This field needs the path of the location \nwhere you installed the tutorial files (i.e., \nc:\\Program_Files\\Nuke_Tutorials\\). \n\nIf you don't know the path, click the folder \nbutton and browse through your directory\nstructure to find and select the folder where \nthe files are stored. "}
+}
