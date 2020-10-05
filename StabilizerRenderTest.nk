@@ -3,7 +3,7 @@
 version 12.2 v3
 define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 <layout version="1.0">
-    <window x="0" y="25" w="1792" h="1067" maximized="1" screen="0">
+    <window x="12" y="126" w="1792" h="1067" screen="0">
         <splitter orientation="1">
             <split size="40"/>
             <dock id="" hideTitles="1" activePageId="Toolbar.1">
@@ -12,11 +12,11 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
             <split size="1129" stretch="1"/>
             <splitter orientation="2">
                 <split size="615"/>
-                <dock id="" activePageId="Viewer.1">
+                <dock id="" activePageId="Viewer.1" focus="true">
                     <page id="Viewer.1"/>
                 </dock>
                 <split size="432"/>
-                <dock id="" activePageId="DAG.1" focus="true">
+                <dock id="" activePageId="DAG.1">
                     <page id="DAG.1"/>
                     <page id="Curve Editor.1"/>
                     <page id="DopeSheet.1"/>
@@ -33,7 +33,9 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 }
 Root {
  inputs 0
- name /Users/Shared/nukescenes/StabilizerRenderTest.nk
+ name /Users/Shared/NukeProfilerRenderTimes/StabilizerRenderTest.nk
+ project_directory "\[python \{nuke.script_directory()\}]"
+ frame 25
  last_frame 60
  lock_range true
  format "1920 1080 0 0 1920 1080 1 HD_1080"
@@ -70,10 +72,10 @@ Root {
 Read {
  inputs 0
  file_type exr
- file "\[value Tutorial_Path.tutorpath]/Keying/images/goldfish.%03d.exr"
+ file "\[python \{nuke.script_directory()\}]/images/goldfish.%03d.exr"
  format "1920 1080 0 0 1920 1080 1 HD_1080"
- last 60
- origlast 60
+ last 30
+ origlast 30
  origset true
  name Read9
  note_font Verdana
@@ -85,22 +87,10 @@ Reformat {
  xpos 155
  ypos -50
 }
-Transform {
- scale 0.86
- center {960 540}
- name Transform1
- xpos 155
- ypos -1
-}
 Stabilize2D {
  name Stabilize2D1
  xpos 155
- ypos 55
-}
-Card3D {
- name Card3D1
- xpos 155
- ypos 120
+ ypos 117
 }
 Write {
  file /Users/plutex/testRender1.mov
@@ -122,28 +112,14 @@ Write {
  version 59
  name Write1
  xpos 155
- ypos 156
+ ypos 161
 }
 Viewer {
- frame 1
- frame_range 1-60
+ frame 25
+ frame_range 1-30
+ frame_range_lock true
  input_process false
  name Viewer2
  xpos 155
  ypos 212
-}
-NoOp {
- inputs 0
- name Tutorial_Path
- label "__________\nDouble-click on\nthis node and\nbrowse to the \nlocation where\nyou installed\nthe tutorial\nproject files. "
- note_font "Verdana Bold"
- note_font_size 9
- note_font_color 0x9e0000ff
- xpos -228
- ypos -159
- addUserKnob {20 User}
- addUserKnob {2 tutorpath l "Tutorial Project Directory:" t "This field needs the full path of the location where you installed the tutorial files. \n\nIf you don't know the path, click the folder button and browse through your directory structure to find and select the folder where the project files are stored. "}
- tutorpath /Users/Shared/Nuke_Tutorials/
- addUserKnob {26 ""}
- addUserKnob {26 "" -STARTLINE T "This field needs the path of the location \nwhere you installed the tutorial files (i.e., \nc:\\Program_Files\\Nuke_Tutorials\\). \n\nIf you don't know the path, click the folder \nbutton and browse through your directory\nstructure to find and select the folder where \nthe files are stored. "}
 }

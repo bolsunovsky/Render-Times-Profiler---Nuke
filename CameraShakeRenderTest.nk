@@ -34,6 +34,8 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 Root {
  inputs 0
  name /Users/Shared/NukeProfilerRenderTimes/CameraShakeRenderTest.nk
+ project_directory "\[python \{nuke.script_directory()\}]"
+ frame 16
  last_frame 60
  lock_range true
  format "1920 1080 0 0 1920 1080 1 HD_1080"
@@ -70,39 +72,27 @@ Root {
 Read {
  inputs 0
  file_type exr
- file "\[value Tutorial_Path.tutorpath]/Keying/images/goldfish.%03d.exr"
+ file "\[python \{nuke.script_directory()\}]/images/goldfish.%03d.exr"
  format "1920 1080 0 0 1920 1080 1 HD_1080"
- last 60
- origlast 60
+ last 30
+ origlast 30
  origset true
  name Read9
  note_font Verdana
  xpos 155
- ypos -146
+ ypos -145
 }
 Reformat {
  name Reformat1
  xpos 155
  ypos -50
 }
-Transform {
- scale 0.86
- center {960 540}
- name Transform1
- xpos 155
- ypos -1
-}
 CameraShake3 {
  name CameraShake3_1
  label "\[value amplitude] px at \[value frequency]"
  xpos 155
- ypos 58
+ ypos 108
  cs_center {{"\[value input.width 0]/2"} {"\[value input.height 0]/2"}}
-}
-Card3D {
- name Card3D1
- xpos 155
- ypos 120
 }
 Write {
  file /Users/plutex/testRender1.mov
@@ -127,8 +117,9 @@ Write {
  ypos 156
 }
 Viewer {
- frame 1
- frame_range 1-60
+ frame 16
+ frame_range 1-30
+ frame_range_lock true
  input_process false
  name Viewer2
  xpos 155
