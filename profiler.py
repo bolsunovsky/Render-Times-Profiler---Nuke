@@ -75,7 +75,6 @@ def updateJSON(data):
     json.dump(data, f)
 
 
-
 # Set current .nk script:
 def setCurrentScript(newScript):
     global _currentScript
@@ -91,7 +90,6 @@ def getCurrentScript():
 
 # Set current nuke script to the first element of the nukeScripts:
 setCurrentScript(nukeScripts[0])
-
 
 
 # Recursively render the scripts repeating based on number of interation:
