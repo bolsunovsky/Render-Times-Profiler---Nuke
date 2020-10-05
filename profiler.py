@@ -91,19 +91,23 @@ def getCurrentScript():
 
 # Set current nuke script to the first element of the nukeScripts:
 setCurrentScript(nukeScripts[0])
-# Open current script with Nuke:
-nuke.scriptOpen(readPath + '/' + getCurrentScript())
 
 
 
 # Recursively render the scripts repeating based on number of interation:
 def executeWrite(renderCount):
+    # Clear previous script, preventing the GUI popping up:
+    nuke.scriptClear()
+    
+    # Open current script with Nuke:
+    nuke.scriptOpen(readPath + '/' + getCurrentScript())
+
                
     global renderTimeResults
     
     for i in range(renderCount):
         nuke.execute(name = 'Write1', start = 1, end = framesToRender, incr = 1)
-
+        
         if i == (renderCount - 1):
             jsonResults[getCurrentScript()] = renderTimeResults
             
