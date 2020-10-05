@@ -6,22 +6,23 @@ from timeit import default_timer as timer
 import json
 import math
 
-# Renders all nuke scripts in a directory with Write node "Write1" present. Outputs render times to a JSON file in a { 'name': [time] } format. Prints average time of a render script set (number of renders can be changed in renderCount for more accurate render time per script)
+# Renders all nuke scripts in a directory with Write node "Write1" present. Outputs render times to a JSON file in a { 'name': [time] } format.
+# Prints average time of a render script set (number of renders can be changed in renderCount for more accurate render time per script).
 
 # Invoke script with arguments:
 # Nuke -t(i) (file: script path) (directory: .nk scrips path) (file: output JSON path)
 
-# Platform Type
+# current Platform identification:
 from sys import platform as __platform
 if __platform == "linux" or __platform == "linux2":
     _platform = 'linux'
 elif __platform == "darwin":
-    _platform = 'osx'
+    _platform = 'macOS'
 elif __platform == "win32":
-    _platform = 'win'
+    _platform = 'windows'
 
 
-# Check if path is to a file:
+# Check if path leads to a file:
 def checkFilePath(path):
     if os.path.isfile(path): return path
     else: raise TypeError("Third argument must be a file")
@@ -31,7 +32,7 @@ def checkJsonFormat(path):
     if path.endswith(".json"): return path
     else: raise TypeError("File must end with .json")
 
-# Check if path is a directory:
+# Check if path is to a directory:
 def checkDirectoryPath(path):
     if os.path.isdir(path): return path
     else: raise TypeError("Second argument must be a directory")
@@ -42,9 +43,9 @@ def findNukeScripts(path):
     if len(nukeScripts) > 0: return nukeScripts
     else: raise LookupError("No Nuke scripts found in the directory")
     
-# Check if running on a compatible os: TODO: test other platforms
+# Check if running on a compatible os: TODO: test other platforms...
 def _checkPlatform(platform):
-    if platform == 'osx': pass
+    if platform == 'macOS': pass
     else: raise ImportWarning(platform + " has not been tested yet. Unstable.")
 
 _checkPlatform(_platform)
