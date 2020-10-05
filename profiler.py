@@ -55,7 +55,7 @@ readPath = checkDirectoryPath(sys.argv[1])
 
 
 # JSON file path:
-savePath = checkJsonFormat((checkFilePath(sys.argv[2])))
+savePath = checkJsonFormat(checkFilePath(sys.argv[2]))
 
 # Amount of times the script is rerendered:
 renderCount = 3
@@ -103,7 +103,7 @@ def executeWrite(renderCount):
     
     for i in range(renderCount):
         nuke.execute(name = 'Write1', start = 1, end = framesToRender, incr = 1)
-        
+
         if i == (renderCount - 1):
             jsonResults[getCurrentScript()] = renderTimeResults
             

@@ -1,9 +1,9 @@
 #! /Applications/Nuke12.2v3/Nuke12.2v3.app/Contents/MacOS/libnuke-12.2.3.dylib -nx
-#write_info Write1 file:"/Users/plutex/testRender1.mov" format:"1920 1080 1" chans:":rgba.red:rgba.green:rgba.blue:" framerange:"1 60" fps:"0" colorspace:"default (Gamma2.2)" datatype:"unknown" transfer:"unknown" views:"main" colorManagement:"Nuke"
+#write_info Write1 file:"[python {nuke.script_directory()}]/StablilizerRenderTest.mov" format:"1920 1080 1" chans:":rgba.red:rgba.green:rgba.blue:" framerange:"1 60" fps:"0" colorspace:"default (Gamma2.2)" datatype:"unknown" transfer:"unknown" views:"main" colorManagement:"Nuke"
 version 12.2 v3
 define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 <layout version="1.0">
-    <window x="12" y="126" w="1792" h="1067" screen="0">
+    <window x="0" y="266" w="1792" h="1067" screen="0">
         <splitter orientation="1">
             <split size="40"/>
             <dock id="" hideTitles="1" activePageId="Toolbar.1">
@@ -12,11 +12,11 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
             <split size="1129" stretch="1"/>
             <splitter orientation="2">
                 <split size="615"/>
-                <dock id="" activePageId="Viewer.1" focus="true">
+                <dock id="" activePageId="Viewer.1">
                     <page id="Viewer.1"/>
                 </dock>
                 <split size="432"/>
-                <dock id="" activePageId="DAG.1">
+                <dock id="" activePageId="DAG.1" focus="true">
                     <page id="DAG.1"/>
                     <page id="Curve Editor.1"/>
                     <page id="DopeSheet.1"/>
@@ -33,7 +33,7 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 }
 Root {
  inputs 0
- name /Users/Shared/NukeProfilerRenderTimes/StabilizerRenderTest.nk
+ name "/Users/plutex/Downloads/Render-Times-Profiler---Nuke-main 2/StabilizerRenderTest.nk"
  project_directory "\[python \{nuke.script_directory()\}]"
  frame 25
  last_frame 60
@@ -93,7 +93,7 @@ Stabilize2D {
  ypos 117
 }
 Write {
- file /Users/plutex/testRender1.mov
+ file "\[python \{nuke.script_directory()\}]/StablilizerRenderTest.mov"
  file_type mov
  mov64_format "mov (QuickTime / MOV)"
  mov64_codec appr
@@ -115,7 +115,6 @@ Write {
  ypos 161
 }
 Viewer {
- frame 25
  frame_range 1-30
  frame_range_lock true
  input_process false

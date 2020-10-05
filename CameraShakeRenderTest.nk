@@ -1,5 +1,5 @@
 #! /Applications/Nuke12.2v3/Nuke12.2v3.app/Contents/MacOS/libnuke-12.2.3.dylib -nx
-#write_info Write1 file:"/Users/plutex/testRender1.mov" format:"1920 1080 1" chans:":rgba.red:rgba.green:rgba.blue:" framerange:"1 60" fps:"0" colorspace:"default (Gamma2.2)" datatype:"unknown" transfer:"unknown" views:"main" colorManagement:"Nuke"
+#write_info Write1 file:"[python {nuke.script_directory()}]/CameraShakeRenderTest.mov" format:"1920 1080 1" chans:":rgba.red:rgba.green:rgba.blue:" framerange:"1 60" fps:"0" colorspace:"default (Gamma2.2)" datatype:"unknown" transfer:"unknown" views:"main" colorManagement:"Nuke"
 version 12.2 v3
 define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 <layout version="1.0">
@@ -33,7 +33,7 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 }
 Root {
  inputs 0
- name /Users/Shared/NukeProfilerRenderTimes/CameraShakeRenderTest.nk
+ name "/Users/plutex/Downloads/Render-Times-Profiler---Nuke-main 2/CameraShakeRenderTest.nk"
  project_directory "\[python \{nuke.script_directory()\}]"
  frame 16
  last_frame 60
@@ -95,7 +95,7 @@ CameraShake3 {
  cs_center {{"\[value input.width 0]/2"} {"\[value input.height 0]/2"}}
 }
 Write {
- file /Users/plutex/testRender1.mov
+ file "\[python \{nuke.script_directory()\}]/CameraShakeRenderTest.mov"
  file_type mov
  mov64_format "mov (QuickTime / MOV)"
  mov64_codec appr
@@ -117,7 +117,6 @@ Write {
  ypos 156
 }
 Viewer {
- frame 16
  frame_range 1-30
  frame_range_lock true
  input_process false
