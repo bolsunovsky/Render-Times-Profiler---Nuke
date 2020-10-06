@@ -3,23 +3,15 @@ import sys
 import os.path
 import nuke
 from timeit import default_timer as timer
+from sys import platform
 import json
 import math
-
-# Renders all nuke scripts in a directory with Write node "Write1" present. Outputs render times to a JSON file in a { 'name': [time] } format.
-# Prints average time of a render script set (number of renders can be changed in renderCount for more accurate render time per script).
+# Renders each script in a directory repeatedly if Write Nodes are present. Outputs render times to a JSON file in a { 'name': [time] } format.
+# Prints an average time of the renders per script. Number of renders can be changed in renderCount for a more consistent average time.
 
 # Invoke script with arguments:
 # Nuke -t(i) (file: script path) (directory: .nk scrips path) (file: output JSON path)
 
-# current Platform identification:
-from sys import platform as __platform
-if __platform == "linux" or __platform == "linux2":
-    _platform = 'linux'
-elif __platform == "darwin":
-    _platform = 'macOS'
-elif __platform == "win32":
-    _platform = 'windows'
 
 
 # Check if path leads to a file:
@@ -39,16 +31,16 @@ def checkDirectoryPath(path):
         
 # Checks for .nk script presence in the given directory:
 def findNukeScripts(path):
-    nukeScripts = filter(lambda script: script.endswith(".nk"), os.listdir(path))
+    nukeScripts = [script for script in os.listdir(path) if script.endswith(".nk")]
     if len(nukeScripts) > 0: return nukeScripts
     else: raise LookupError("No Nuke scripts found in the directory")
     
 # Check if running on a compatible os: TODO: test other platforms...
 def _checkPlatform(platform):
-    if platform == 'macOS': pass
-    else: raise ImportWarning(platform + " has not been tested yet. Unstable.")
+    if platform == "darwin": pass
+    else: print(platform + " has not been tested yet and is unstable")
 
-_checkPlatform(_platform)
+_checkPlatform(platform)
 
 # .nk directory read path:
 readPath = checkDirectoryPath(sys.argv[1])
@@ -61,7 +53,7 @@ savePath = checkJsonFormat(checkFilePath(sys.argv[2]))
 renderCount = 3
 
 # Amount of frames to render per render count:
-framesToRender = 24
+framesToRender = 30
 
 # Declarations:
 nukeScripts = findNukeScripts(path = readPath)
@@ -104,18 +96,24 @@ def executeWrite(renderCount):
     global renderTimeResults
     
     for i in range(renderCount):
-        nuke.execute(name = 'Write1', start = 1, end = framesToRender, incr = 1)
-        
+        # Find all Write Nodes within the script and execute:
+        writeNodes = [node for node in nuke.allNodes(recurseGroups = True) if node.Class() == 'Write']
+        # Check for Write Node presence:
+        if writeNodes:
+            for node in writeNodes: nuke.execute(node, start = 1, end = framesToRender, incr = 1)
+        else:
+            print("No Write Nodes found in " + getCurrentScript())
         if i == (renderCount - 1):
+            # Update JSON file once finished rendering a script:
             jsonResults[getCurrentScript()] = renderTimeResults
             
             averageRenderTime = math.floor(sum(renderTimeResults) / len(renderTimeResults) * 100)/100.0
-            # Returns average render time per script tested.
+            # Returns average render time per script tested:
             print("Finished rendering " + getCurrentScript() + " with an average render time of " + str(averageRenderTime) + " seconds")
             updateJSON(jsonResults)
 
             renderTimeResults = []
-            
+            # Update current script index:
             currentScriptIndex = nukeScripts.index(getCurrentScript())
             if currentScriptIndex + 1 < len(nukeScripts):
                 
@@ -141,7 +139,8 @@ def endRender():
 nuke.addBeforeRender(startRender)
 nuke.addAfterRender(endRender)
 
+
 # Render the project:
 executeWrite(renderCount)
     
-
+    
