@@ -1,4 +1,3 @@
-
 import sys
 import os.path
 import nuke
@@ -6,65 +5,82 @@ from timeit import default_timer as timer
 from sys import platform
 import json
 import math
+
+
 # Renders each script in a directory repeatedly if Write Nodes are present. Outputs render times to a JSON file in a { 'name': [time] } format.
 # Prints an average time of the renders per script. Number of renders can be changed in renderCount for a more consistent average time.
 
 # Invoke script with arguments:
-# Nuke -t(i) (file: script path) (directory: .nk scrips path) (file: output JSON path)
+# Nuke -t(i) (0: file: script path) (1: directory: .nk scrips path) (2: file: output JSON path) (3: optional number: number of frames to render (default is 30) in '"number"' format) (4: optional number: number of renders(default is 3) in '"number"' format)
+
+# Perform search on a directory and find nuke scripts
+# Render them and record time
+# Output JSON with times
+
+class BaseTest:
+    @classmethod
+    # Check if path leads to a file:
+    def checkFilePath(self, path):
+        if os.path.isfile(path):
+            return path
+        else:
+            raise TypeError("Third argument must be a file")
 
 
+    @classmethod
+    # Check if file is of JSON format:
+    def checkJsonFormat(cls, path):
+        # Split the extension from the path and convert it to lower case:
+        fileExtension = extensionOf(path)
+        if fileExtension == ".json":
+            return path
+        else:
+            raise TypeError("File must end with .json")
 
-# Check if path leads to a file:
-def checkFilePath(path):
-    if os.path.isfile(path): return path
-    else: raise TypeError("Third argument must be a file")
 
-# Check if file is of JSON format:
-def checkJsonFormat(path):
-    if path.endswith(".json"): return path
-    else: raise TypeError("File must end with .json")
+    @classmethod
+    # Check if path is to a directory:
+    def checkDirectoryPath(cls, path):
+        if os.path.isdir(path):
+            return path
+        else:
+            raise TypeError("Second argument must be a directory")
+            
+    @classmethod
+    # Check if command line arguments are assignable else return default value
+    def checkArgv(cls, index, default):
+        try:
+            return int(sys.argv[index].strip('"'))
+        except:
+            return default
 
-# Check if path is to a directory:
-def checkDirectoryPath(path):
-    if os.path.isdir(path): return path
-    else: raise TypeError("Second argument must be a directory")
+    @classmethod
+    # Check if running on a compatible os: TODO: test other platforms...
+    def _checkPlatform(cls, platform):
+        if platform == "darwin": pass
+        else:
+            print(platform + " has not been tested yet and is unstable")
         
-# Checks for .nk script presence in the given directory:
-def findNukeScripts(path):
-    nukeScripts = [script for script in os.listdir(path) if script.endswith(".nk")]
-    if len(nukeScripts) > 0: return nukeScripts
-    else: raise LookupError("No Nuke scripts found in the directory")
-    
-# Check if running on a compatible os: TODO: test other platforms...
-def _checkPlatform(platform):
-    if platform == "darwin": pass
-    else: print(platform + " has not been tested yet and is unstable")
 
-_checkPlatform(platform)
+class NukeTest(BaseTest):
 
-# .nk directory read path:
-readPath = checkDirectoryPath(sys.argv[1])
+    @classmethod
+    # Checks for .nk script presence in the given directory:
+    def findNukeScripts(cls, path):
+        nukeScripts = [script for script in os.listdir(path) if extensionOf(script) == ".nk"]
+        if len(nukeScripts) > 0:
+            return nukeScripts
+        else:
+            raise LookupError("No Nuke scripts found in the directory")
+            
 
+# Get file extension
+extensionOf = lambda file: os.path.splitext(file)[-1].lower()
 
-# JSON file path:
-savePath = checkJsonFormat(checkFilePath(sys.argv[2]))
-
-# Amount of times the script is rerendered:
-renderCount = 3
-
-# Amount of frames to render per render count:
-framesToRender = 30
-
-# Declarations:
-nukeScripts = findNukeScripts(path = readPath)
-print(nukeScripts)
-renderTimeResults = []
-jsonResults = {}
-_currentScript = ""
-
+# dump json data to the output file:
 def updateJSON(data):
-    f = open(savePath, "w")
-    json.dump(data, f)
+    with open(savePath, "w") as f:
+        json.dump(data, f)
 
 
 # Set current .nk script:
@@ -73,15 +89,11 @@ def setCurrentScript(newScript):
     changed = _currentScript != (newScript)
     if changed:
         _currentScript = newScript
-
+        
 
 def getCurrentScript():
     return _currentScript
-    
-    
 
-# Set current nuke script to the first element of the nukeScripts:
-setCurrentScript(nukeScripts[0])
 
 
 # Recursively render the scripts repeating based on number of interation:
@@ -120,10 +132,34 @@ def executeWrite(renderCount):
                 setCurrentScript(nukeScripts[currentScriptIndex + 1])
                 executeWrite(renderCount)
                 
+# --------------------------
 
+NukeTest()._checkPlatform
+
+# Declarations:
+nukeScripts = NukeTest().findNukeScripts(path = readPath)
+renderTimeResults = []
+jsonResults = {}
+_currentScript = ""
+
+# Set current nuke script to the first element of the nukeScripts:
+setCurrentScript(nukeScripts[0])
+
+# .nk directory read path:
+readPath = NukeTest().checkDirectoryPath(sys.argv[1])
+
+# JSON file path:
+savePath = NukeTest().checkJsonFormat(NukeTest().checkFilePath(sys.argv[2]))
+
+# Amount of frames to render per render count:
+framesToRender = NukeTest().checkArgv(index = 3, default = 15)
+
+# Amount of times the script is rerendered:
+renderCount = NukeTest().checkArgv(index = 4, default = 3)
 
 startTime = timer()
 
+# Begin / End Render Callbacks
 def startRender():
     global startTime
     startTime = timer()
@@ -139,8 +175,6 @@ def endRender():
 nuke.addBeforeRender(startRender)
 nuke.addAfterRender(endRender)
 
-
 # Render the project:
 executeWrite(renderCount)
-    
     
