@@ -133,10 +133,16 @@ def executeWrite(renderCount):
                 executeWrite(renderCount)
                 
 # --------------------------
+# Declarations:
 
 NukeTest()._checkPlatform
 
-# Declarations:
+# .nk directory read path:
+readPath = NukeTest().checkDirectoryPath(sys.argv[1])
+
+# JSON file path:
+savePath = NukeTest().checkJsonFormat(NukeTest().checkFilePath(sys.argv[2]))
+
 nukeScripts = NukeTest().findNukeScripts(path = readPath)
 renderTimeResults = []
 jsonResults = {}
@@ -145,11 +151,6 @@ _currentScript = ""
 # Set current nuke script to the first element of the nukeScripts:
 setCurrentScript(nukeScripts[0])
 
-# .nk directory read path:
-readPath = NukeTest().checkDirectoryPath(sys.argv[1])
-
-# JSON file path:
-savePath = NukeTest().checkJsonFormat(NukeTest().checkFilePath(sys.argv[2]))
 
 # Amount of frames to render per render count:
 framesToRender = NukeTest().checkArgv(index = 3, default = 15)
