@@ -58,7 +58,7 @@ class BaseTest:
         try:
             return int(sys.argv[index].strip('"'))
         except:
-            print("returning default (" + default + ") for " + index + " argument")
+            print("returning default (" + str(default) + ") for argument " + str(index))
             return default
 
     @classmethod

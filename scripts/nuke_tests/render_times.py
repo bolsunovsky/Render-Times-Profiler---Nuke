@@ -22,14 +22,15 @@ class NukeTest(tests.BaseTest):
 class RenderTest():
     
     def __init__(self):
+        self.framesToRender = 30
+        self.renderCount = 3
+        
         self._currentScript = ""
+        self.readPath = ""
+        self.savePath = ""
         self.renderTimeResults = []
         self.jsonResults = {}
         self.startTime = timer()
-        self.readPath = ""
-        self.savePath = ""
-        self.framesToRender = 30
-        self.renderCount = 3
         self.nukeScripts = []
 
 
@@ -115,10 +116,10 @@ class RenderTest():
         self.setCurrentScript(self.nukeScripts[0])
 
         # Amount of frames to render per render count:
-        self.framesToRender = NukeTest().checkArgv(index = 3, default = 15)
+        self.framesToRender = NukeTest().checkArgv(index = 3, default = self.framesToRender)
 
         # Amount of times the script is rerendered:
-        self.renderCount = NukeTest().checkArgv(index = 4, default = 3)
+        self.renderCount = NukeTest().checkArgv(index = 4, default = self.renderCount)
         
         # Adding callbacks for time tracking:
         nuke.addBeforeRender(self.startRender)
@@ -127,7 +128,3 @@ class RenderTest():
         # Render the project:
         self.executeWrite(self.renderCount)
             
-
-
-
-
