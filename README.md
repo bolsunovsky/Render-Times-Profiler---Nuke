@@ -9,6 +9,6 @@
 
 Invoke Python script with arguments:
 
-Nuke -t(i) (0: file: profiler.py path) (1: directory: .nk scrips path) (2: file: output JSON path) (3: optional number: number of frames to render (default is 30) in '"number"' format) (4: optional number: number of renders(default is 3) in '"number"' format)
+Nuke -t(i) (0: file: executor.py path) (1: directory: .nk scrips path) (2: file: output JSON path) (3: optional number: number of frames to render (default is 30) in '"number"' format) (4: optional number: number of renders(default is 3) in '"number"' format)
 
-`nuke -ti Render-Times-Profiler---Nuke-main/profiler.py Render-Times-Profiler---Nuke-main Render-Times-Profiler---Nuke-main/profilerOutput.json '"60"' '"5"'`
+`nuke -ti Render-Times-Profiler---Nuke-main/executor.py Render-Times-Profiler---Nuke-main Render-Times-Profiler---Nuke-main/output.json '"60"' '"5"'`
