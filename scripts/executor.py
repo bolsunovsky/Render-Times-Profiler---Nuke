@@ -1,11 +1,5 @@
 from nuke_tests import render_times
-from timeit import default_timer as timer
-from sys import platform
-import os.path
-import sys
-import nuke
-import math
-import json
+
 
 # Renders each script in a directory repeatedly if Write Nodes are present. Outputs render times to a JSON file in a { 'name': [time] } format.
 # Prints an average time of the renders per script. Number of renders can be changed in renderCount for a more consistent average time.
@@ -17,5 +11,7 @@ import json
 # Render them and record time
 # Output JSON with times
 
+
 scriptRenderTest = render_times.RenderTest()
+# Run the render time test.
 scriptRenderTest.run()
