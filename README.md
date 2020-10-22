@@ -9,6 +9,6 @@
 
 Invoke Python script with arguments:
 
-Nuke -t(i) (0: file: executor.py path) (1: directory: .nk scrips path) (2: file: output JSON path) (3: optional number: number of frames to render (default is 30) in '"number"' format) (4: optional number: number of renders(default is 3) in '"number"' format)
+Nuke -t(i) (0: file: executor.py path) (1: directory: .nk scrips path) (2: file: output JSON path) (3: optional number: number of frames to render (default is 30) in a '"number"' format) (4: optional number: number of renders (default is 3) in a '"number"' format)
 
 `nuke -ti <path>/scripts/executor.py <path> <path>/output.json '"60"' '"5"'`
