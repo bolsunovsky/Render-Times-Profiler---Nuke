@@ -13,5 +13,5 @@ from nuke_tests import render_times
 
 
 scriptRenderTest = render_times.RenderTest()
-# Run the render time test.
+# Runs the render time test:
 scriptRenderTest.run()
