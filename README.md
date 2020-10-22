@@ -1,4 +1,4 @@
-# Render Time Profiler for Foundry Nuke [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)]
+# Render Time Profiler for Foundry Nuke ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
 
  
 * Renders each script in a directory repeatedly if Write Nodes are present. Outputs render times to a JSON file in a { 'name': [time] } format.
