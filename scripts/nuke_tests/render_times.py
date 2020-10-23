@@ -5,7 +5,7 @@ from timeit import default_timer as timer
 from sys import platform
 import json
 import math
-from testing_functions.test import NukeTest
+from testing_functions.tests import NukeTest
 
 
 class RenderTest():
