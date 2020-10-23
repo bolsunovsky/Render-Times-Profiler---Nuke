@@ -25,8 +25,6 @@ class BaseTest:
             return path
         else:
             raise TypeError("Third argument must be a file")
-
-        
     
     # Get file extension
     @classmethod
@@ -57,7 +55,7 @@ class BaseTest:
     def checkArgv(cls, index, default):
         try:
             return int(sys.argv[index].strip('"'))
-        except:
+        except: 
             print("returning default (" + str(default) + ") for argument " + str(index))
             return default
 
@@ -68,3 +66,14 @@ class BaseTest:
         else:
             print(platform + " has not been tested yet and is unstable")
         
+
+class NukeTest(BaseTest):
+
+    @classmethod
+    # Checks for .nk script presence in the given directory:
+    def findNukeScripts(cls, path):
+        scripts = [script for script in os.listdir(path) if NukeTest().extensionOf(script) == ".nk"]
+        if len(scripts) > 0:
+            return scripts
+        else:
+            raise LookupError("No Nuke scripts found in the directory")

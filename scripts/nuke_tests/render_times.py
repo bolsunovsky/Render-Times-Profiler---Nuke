@@ -5,19 +5,8 @@ from timeit import default_timer as timer
 from sys import platform
 import json
 import math
-from testing_functions import tests
+from testing_functions.test import NukeTest
 
-
-class NukeTest(tests.BaseTest):
-
-    @classmethod
-    # Checks for .nk script presence in the given directory:
-    def findNukeScripts(cls, path):
-        scripts = [script for script in os.listdir(path) if NukeTest().extensionOf(script) == ".nk"]
-        if len(scripts) > 0:
-            return scripts
-        else:
-            raise LookupError("No Nuke scripts found in the directory")
 
 class RenderTest():
     
@@ -59,8 +48,6 @@ class RenderTest():
         
         # Open current script with Nuke:
         nuke.scriptOpen(self.readPath + '/' + self.getCurrentScript())
-
-                
         
         for i in range(renderCount):
             # Find all Write Nodes within the script and execute:
@@ -102,24 +89,25 @@ class RenderTest():
         
         
     def run(self):
-        NukeTest()._checkPlatform
+        test = NukeTest()
+        test._checkPlatform
 
         # .nk directory read path:
-        self.readPath = NukeTest().checkDirectoryPath(sys.argv[1])
+        self.readPath = test.checkDirectoryPath(sys.argv[1])
 
         # JSON file path:
-        self.savePath = NukeTest().checkJsonFormat(NukeTest().checkFilePath(sys.argv[2]))
+        self.savePath = test.checkJsonFormat(test.checkFilePath(sys.argv[2]))
 
-        self.nukeScripts = NukeTest().findNukeScripts(path = self.readPath)
+        self.nukeScripts = test.findNukeScripts(path = self.readPath)
 
         # Set current nuke script to the first element of the self.nukeScripts:
         self.setCurrentScript(self.nukeScripts[0])
 
         # Amount of frames to render per render count:
-        self.framesToRender = NukeTest().checkArgv(index = 3, default = self.framesToRender)
+        self.framesToRender = test.checkArgv(index = 3, default = self.framesToRender)
 
         # Amount of times the script is rerendered:
-        self.renderCount = NukeTest().checkArgv(index = 4, default = self.renderCount)
+        self.renderCount = test.checkArgv(index = 4, default = self.renderCount)
         
         # Adding callbacks for time tracking:
         nuke.addBeforeRender(self.startRender)
@@ -127,4 +115,5 @@ class RenderTest():
 
         # Render the project:
         self.executeWrite(self.renderCount)
-            
+        
+        
