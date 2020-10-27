@@ -1,9 +1,8 @@
 #! /Applications/Nuke12.2v3/Nuke12.2v3.app/Contents/MacOS/libnuke-12.2.3.dylib -nx
-#write_info Write1 file:"[python {nuke.script_directory()}]/StablilizerRenderTest.mov" format:"1920 1080 1" chans:":rgba.red:rgba.green:rgba.blue:" framerange:"1 60" fps:"0" colorspace:"default (Gamma2.2)" datatype:"unknown" transfer:"unknown" views:"main" colorManagement:"Nuke"
 version 12.2 v3
 define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 <layout version="1.0">
-    <window x="0" y="266" w="1792" h="1067" screen="0">
+    <window x="0" y="25" w="1792" h="1067" maximized="1" screen="0">
         <splitter orientation="1">
             <split size="40"/>
             <dock id="" hideTitles="1" activePageId="Toolbar.1">
@@ -33,9 +32,9 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 }
 Root {
  inputs 0
- name "/Users/plutex/Downloads/Render-Times-Profiler---Nuke-main 2/StabilizerRenderTest.nk"
+ name /Users/Shared/NukeProfilerRenderTimes/glow-shake-dual-write_test.nk
  project_directory "\[python \{nuke.script_directory()\}]"
- frame 25
+ frame 2
  last_frame 60
  lock_range true
  format "1920 1080 0 0 1920 1080 1 HD_1080"
@@ -80,20 +79,23 @@ Read {
  name Read9
  note_font Verdana
  xpos 155
- ypos -146
+ ypos -145
 }
 Reformat {
  name Reformat1
  xpos 155
- ypos -50
+ ypos -23
 }
-Stabilize2D {
- name Stabilize2D1
+CameraShake3 {
+ name CameraShake3_1
+ label "\[value amplitude] px at \[value frequency]"
  xpos 155
- ypos 117
+ ypos 108
+ cs_center {{"\[value input.width 0]/2"} {"\[value input.height 0]/2"}}
 }
+set N31483200 [stack 0]
 Write {
- file "\[python \{nuke.script_directory()\}]/StablilizerRenderTest.mov"
+ file "\[python \{nuke.script_directory()\}]/CameraShake_test.mov"
  file_type mov
  mov64_format "mov (QuickTime / MOV)"
  mov64_codec appr
@@ -111,8 +113,9 @@ Write {
  checkHashOnRead false
  version 59
  name Write1
+ selected true
  xpos 155
- ypos 161
+ ypos 159
 }
 Viewer {
  frame_range 1-30
@@ -120,5 +123,40 @@ Viewer {
  input_process false
  name Viewer2
  xpos 155
+ ypos 212
+}
+push $N31483200
+Glow2 {
+ tint 0.365
+ brightness 3.88
+ name Glow1
+ xpos 286
+ ypos 112
+}
+Write {
+ file "\[python \{nuke.script_directory()\}]/Glow_test.mov"
+ file_type mov
+ mov64_format "mov (QuickTime / MOV)"
+ mov64_codec appr
+ mov_h264_codec_profile "High 4:2:0 8-bit"
+ mov64_pixel_format {{0} "\33\1FÕT"}
+ mov64_quality High
+ mov64_fast_start true
+ mov64_write_timecode true
+ mov64_gop_size 12
+ mov64_b_frames 0
+ mov64_bitrate 20000
+ mov64_bitrate_tolerance 4000000
+ mov64_quality_min 1
+ mov64_quality_max 3
+ checkHashOnRead false
+ name Write2
+ xpos 286
+ ypos 157
+}
+Viewer {
+ frame_range 1-60
+ name Viewer1
+ xpos 286
  ypos 212
 }

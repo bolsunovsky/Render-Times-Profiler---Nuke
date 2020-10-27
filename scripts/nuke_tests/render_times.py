@@ -11,16 +11,16 @@ from testing_functions.tests import NukeTest
 class RenderTest():
     
     def __init__(self):
-        self.framesToRender = 30
-        self.renderCount = 3
+        self.defaultFramesToRender = 30
+        self.defaultRenderPassCount = 3
         
-        self._currentScript = ""
         self.readPath = ""
         self.savePath = ""
+        self._currentScript = ""
+        self.nukeScripts = []
         self.renderTimeResults = []
         self.jsonResults = {}
         self.startTime = timer()
-        self.nukeScripts = []
 
 
     # dump json data to the output file:
@@ -42,22 +42,23 @@ class RenderTest():
 
 
     # Recursively render the scripts repeating based on number of interation:
-    def executeWrite(self, renderCount):
+    
+    def executeWrite(self, renderPassCount):
         # Clear previous script, preventing the GUI popping up:
         nuke.scriptClear()
         
         # Open current script with Nuke:
         nuke.scriptOpen(self.readPath + '/' + self.getCurrentScript())
         
-        for i in range(renderCount):
+        for i in range(renderPassCount):
             # Find all Write Nodes within the script and execute:
             writeNodes = [node for node in nuke.allNodes(recurseGroups = True) if node.Class() == 'Write']
             # Check for Write Node presence:
             if writeNodes:
-                for node in writeNodes: nuke.execute(node, start = 1, end = self.framesToRender, incr = 1)
+                for node in writeNodes: nuke.execute(node, start = 1, end = self.defaultFramesToRender, incr = 1)
             else:
                 print("No Write Nodes found in " + getCurrentScript())
-            if i == (renderCount - 1):
+            if i == (renderPassCount - 1):
                 # Update JSON file once finished rendering a script:
                 self.jsonResults[self.getCurrentScript()] = self.renderTimeResults
                 
@@ -72,7 +73,7 @@ class RenderTest():
                 if currentScriptIndex + 1 < len(self.nukeScripts):
                     
                     self.setCurrentScript(self.nukeScripts[currentScriptIndex + 1])
-                    self.executeWrite(renderCount)
+                    self.executeWrite(renderPassCount)
             
 
 
@@ -104,16 +105,15 @@ class RenderTest():
         self.setCurrentScript(self.nukeScripts[0])
 
         # Amount of frames to render per render count:
-        self.framesToRender = test.checkArgv(index = 3, default = self.framesToRender)
+        self.defaultFramesToRender = test.checkArgv(index = 3, default = self.defaultFramesToRender)
 
         # Amount of times the script is rerendered:
-        self.renderCount = test.checkArgv(index = 4, default = self.renderCount)
+        self.defaultRenderPassCount = test.checkArgv(index = 4, default = self.defaultRenderPassCount)
         
         # Adding callbacks for time tracking:
         nuke.addBeforeRender(self.startRender)
         nuke.addAfterRender(self.endRender)
 
         # Render the project:
-        self.executeWrite(self.renderCount)
-        
+        self.executeWrite(self.defaultRenderPassCount)
         

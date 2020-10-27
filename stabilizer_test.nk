@@ -1,5 +1,5 @@
 #! /Applications/Nuke12.2v3/Nuke12.2v3.app/Contents/MacOS/libnuke-12.2.3.dylib -nx
-#write_info Write1 file:"[python {nuke.script_directory()}]/CameraShakeRenderTest.mov" format:"1920 1080 1" chans:":rgba.red:rgba.green:rgba.blue:" framerange:"1 60" fps:"0" colorspace:"default (Gamma2.2)" datatype:"unknown" transfer:"unknown" views:"main" colorManagement:"Nuke"
+#write_info Write1 file:"[python {nuke.script_directory()}]/Stablilizer_test.mov" format:"1920 1080 1" chans:":rgba.red:rgba.green:rgba.blue:" framerange:"1 60" fps:"0" colorspace:"default (Gamma2.2)" datatype:"unknown" transfer:"unknown" views:"main" colorManagement:"Nuke"
 version 12.2 v3
 define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 <layout version="1.0">
@@ -33,9 +33,9 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 }
 Root {
  inputs 0
- name "/Users/plutex/Downloads/Render-Times-Profiler---Nuke-main 2/CameraShakeRenderTest.nk"
+ name /Users/Shared/NukeProfilerRenderTimes/stabilizer_test.nk
  project_directory "\[python \{nuke.script_directory()\}]"
- frame 16
+ frame 25
  last_frame 60
  lock_range true
  format "1920 1080 0 0 1920 1080 1 HD_1080"
@@ -80,22 +80,20 @@ Read {
  name Read9
  note_font Verdana
  xpos 155
- ypos -145
+ ypos -146
 }
 Reformat {
  name Reformat1
  xpos 155
  ypos -50
 }
-CameraShake3 {
- name CameraShake3_1
- label "\[value amplitude] px at \[value frequency]"
+Stabilize2D {
+ name Stabilize2D1
  xpos 155
- ypos 108
- cs_center {{"\[value input.width 0]/2"} {"\[value input.height 0]/2"}}
+ ypos 117
 }
 Write {
- file "\[python \{nuke.script_directory()\}]/CameraShakeRenderTest.mov"
+ file "\[python \{nuke.script_directory()\}]/Stablilizer_test.mov"
  file_type mov
  mov64_format "mov (QuickTime / MOV)"
  mov64_codec appr
@@ -114,7 +112,7 @@ Write {
  version 59
  name Write1
  xpos 155
- ypos 156
+ ypos 161
 }
 Viewer {
  frame_range 1-30
