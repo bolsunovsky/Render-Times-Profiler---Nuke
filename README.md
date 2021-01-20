@@ -4,6 +4,9 @@
 * Renders each script in a directory repeatedly if Write Nodes are present. Outputs render times to a JSON file in a { 'name': [time] } format.
 * Prints an average time of the renders per script. Number of renders can be changed in renderCount for a more consistent average time.
 
+## Sample Output
+https://i.imgur.com/ItlA3AU.png
+![Example](https://i.imgur.com/NZw4YDs.png "Last render time followed by an average render time")
 
 ## Running
 
